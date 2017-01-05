@@ -130,6 +130,14 @@
                                     {
                                       "name": "TEMPLATE_FILE",
                                       "value": "/var/lib/haproxy/conf/custom/haproxy-config.template"
+                                    },
+                                    {
+                                      "name": "ROUTER_SYSLOG_ADDRESS",
+                                      "value": "${ROUTER_SYSLOG_ADDRESS}"
+                                    },
+                                    {
+                                      "name": "ROUTER_LOG_LEVEL",
+                                      "value": "${ROUTER_LOG_LEVEL}"
                                     }
                                 ],
                                 "volumeMounts": [
@@ -255,10 +263,20 @@
         "generate": "expression",
         "from": "[a-zA-Z0-9]{15}"
       },
-       {
+      {
         "name": "IMAGE_VERSION",
         "description": "The OpenShift router image version which should be deployed",
         "value": "openshift/origin-haproxy-router:v1.3.1"
+      },
+      {
+        "name": "ROUTER_SYSLOG_ADDRESS",
+        "description": "The hostname or address of the syslog server to log to",
+        "value": ""
+      },
+      {
+        "name": "ROUTER_LOG_LEVEL",
+        "description": "The hostname or address of the syslog server to log to",
+        "value": "debug"
       }
   ]
 }

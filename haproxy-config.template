@@ -8,6 +8,9 @@
 global
   # maxconn 4096
   daemon
+{{ with (env "ROUTER_SYSLOG_ADDRESS" "") }}
+  log {{.}} local1 {{env "ROUTER_LOG_LEVEL" "warning"}}
+{{ end }}
   ca-base /etc/ssl
   crt-base /etc/ssl
   stats socket /var/lib/haproxy/run/haproxy.sock mode 600 level admin
@@ -87,6 +90,10 @@ listen stats :1936
 frontend public
   bind :{{env "ROUTER_SERVICE_HTTP_PORT" "80"}}
   mode http
+{{ if ne (env "ROUTER_SYSLOG_ADDRESS" "") ""}}
+  option httplog
+  log global
+{{ end }}
   tcp-request inspect-delay 5s
   tcp-request content accept if HTTP
 
@@ -129,6 +136,10 @@ backend openshift_default
 # Plain http backend but request is TLS, terminated at edge
 backend be_edge_http_{{$cfgIdx}}
   mode http
+{{ if ne (env "ROUTER_SYSLOG_ADDRESS" "") ""}}
+  option httplog
+  log global
+{{ end }}
   option redispatch
   option forwardfor
   balance leastconn

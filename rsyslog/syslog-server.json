@@ -1,0 +1,116 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {},
+    "objects": [
+        {
+            "kind": "ServiceAccount",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "logger"
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "logger",
+                "labels": {
+                    "logger": "rsyslog"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "maxUnavailable": "25%",
+                        "maxSurge": 0,
+                        "updatePercent": -25
+                    },
+                    "resources": {}
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "logger": "rsyslog"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "logger": "rsyslog"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "rsyslog",
+                                "image": "docker.io/philipgough/rsyslog",
+                                "ports": [
+                                    {
+                                        "name": "rsyslog-udp",
+                                        "containerPort": 514,
+                                        "protocol": "UDP"
+                                    },
+                                    {
+                                        "name": "rsyslog-tcp",
+                                        "containerPort": 514,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "volumeMounts": [
+                                ],
+                                "resources": {},
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "volumes": [
+                        ],
+                        "serviceAccountName": "logger",
+                        "serviceAccount": "logger",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {}
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "logger",
+                "labels": {
+                    "logger": "rsyslog"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "logger-tcp",
+                        "protocol": "TCP",
+                        "port": 514,
+                        "targetPort": 514
+                    },
+                    {
+                        "name": "logger-udp",
+                        "protocol": "UDP",
+                        "port": 514,
+                        "targetPort": 514
+                    }
+                ],
+                "selector": {
+                    "logger": "rsyslog"
+                }
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        }
+    ],
+    "parameters": [
+  ]
+}
