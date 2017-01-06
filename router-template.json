@@ -4,35 +4,6 @@
     "metadata": {},
     "objects": [
         {
-            "kind": "ServiceAccount",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "router"
-            }
-        },
-        {
-            "kind": "ClusterRoleBinding",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${ENVIRONMENT_NAMESPACE}-proxy-role"
-            },
-            "userNames": [
-                "system:serviceaccount:${ENVIRONMENT_NAMESPACE}:router"
-            ],
-            "groupNames": null,
-            "subjects": [
-                {
-                    "kind": "ServiceAccount",
-                    "namespace": "${ENVIRONMENT_NAMESPACE}",
-                    "name": "router"
-                }
-            ],
-            "roleRef": {
-                "kind": "ClusterRole",
-                "name": "system:router"
-            }
-        },
-        {
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
@@ -116,6 +87,10 @@
                                         "value": "${ENVIRONMENT_NAMESPACE}"
                                     },
                                     {
+                                        "name": "NAMESPACE_SERVICE_ACCOUNT",
+                                        "value": "${NAMESPACE_SERVICE_ACCOUNT}"
+                                    },
+                                    {
                                         "name": "STATS_PASSWORD",
                                         "value": "${STATS_PASSWORD}"
                                     },
@@ -150,8 +125,8 @@
                             }
                           }
                         ],
-                        "serviceAccountName": "router",
-                        "serviceAccount": "router",
+                        "serviceAccountName": "${NAMESPACE_SERVICE_ACCOUNT}",
+                        "serviceAccount": "${NAMESPACE_SERVICE_ACCOUNT}",
                         "hostNetwork": false,
                         "securityContext": {}
                     }
@@ -238,6 +213,11 @@
       {
         "name": "ENVIRONMENT_NAMESPACE",
         "description": "The namespace the router should be limited to",
+        "required": true
+      },
+      {
+        "name": "NAMESPACE_SERVICE_ACCOUNT",
+        "description": "The service account generated with the environment project",
         "required": true
       },
       {
