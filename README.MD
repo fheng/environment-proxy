@@ -27,5 +27,6 @@ sudo oc new-app -f router-template.json -n <environment-project-namespace> --par
 For example :
 
 ```
-sudo oc new-app -f router-template.json -n rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT_NAMESPACE=rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT=myEnvironment --param=DOMAIN=my.example.com
+sudo oc new-app -f router-template.json -n rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT_NAMESPACE=rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT=myEnvironment --param=DOMAIN=my.example.com --param=ROUTER_SYSLOG_ADDRESS=logger:514
 ```
+
