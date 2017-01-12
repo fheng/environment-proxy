@@ -160,11 +160,17 @@ backend be_edge_http_{{$cfgIdx}}
   {{ else }}
   cookie {{$cfg.RoutingKeyName}} insert indirect nocache httponly
   {{ end }}
+
   http-request set-header Forwarded for=%[src];host=%[req.hdr(host)];proto=%[req.hdr(X-Forwarded-Proto)]
   {{ with $value := index $cfg.Annotations "subdomain"}}
   reqirep ^([^\ :]*)\ /{{$value}}/(.*)  \1\ /\2
   reqirep ^([^\ :]*)\ /{{$value}}(.*)  \1\ /\2
+
+  rspirep ^(Set-Cookie:.*)\ Path=(.*) \1\ Path=/{{$value}}
+
  {{ end }}
+
+
     {{ range $serviceUnitName, $weight := $cfg.ServiceUnitNames }}
       {{ if ne $weight 0 }}
         {{ with $serviceUnit := index $.ServiceUnits $serviceUnitName }}
