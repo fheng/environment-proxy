@@ -168,6 +168,9 @@ backend be_edge_http_{{$cfgIdx}}
 
   rspirep ^(Set-Cookie:.*)\ Path=(.*) \1\ Path=/{{$value}}
 
+  acl made_redirect res.hdr(Location) -m found
+  rspirep ^Location:\ (https?://%[req.hdr(host)](:[0-9]+)?)?(/.*) Location:\ /{{$value}}\3 if made_redirect
+
  {{ end }}
 
 
