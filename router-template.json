@@ -249,7 +249,7 @@
        {
         "name": "IMAGE_VERSION",
         "description": "The OpenShift router image version which should be deployed",
-        "value": "openshift/origin-haproxy-router:v1.3.1"
+        "value": "openshift3/ose-haproxy-router:v3.3.1.9-1"
       }
   ]
 }
