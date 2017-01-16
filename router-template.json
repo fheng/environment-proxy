@@ -130,6 +130,10 @@
                                     {
                                       "name": "TEMPLATE_FILE",
                                       "value": "/var/lib/haproxy/conf/custom/haproxy-config.template"
+                                    },
+                                    {
+                                      "name": "ROUTER_SYSLOG_ADDRESS",
+                                      "value" : "${ROUTER_SYSLOG_ADDRESS}"
                                     }
                                 ],
                                 "volumeMounts": [
@@ -207,6 +211,7 @@
                 }
             },
             "spec": {
+                "host": "${ENVIRONMENT}.${DOMAIN}",
                 "to": {
                     "kind": "Service",
                     "name": "environment-proxy",
@@ -241,15 +246,30 @@
         "required": true
       },
       {
+        "name": "DOMAIN",
+        "description": "The doamin name to attach the route to",
+        "required": true
+      },
+      {
+        "name": "ENVIRONMENT",
+        "description": "The environment name created via the RHMAP studio",
+        "required": true
+      },
+      {
+        "name": "ROUTER_SYSLOG_ADDRESS",
+        "description": "Remote syslog server address anf port",
+        "value": ""
+      },
+      {
         "name": "STATS_PASSWORD",
         "description": "The password for the HAProxy stats service",
         "generate": "expression",
         "from": "[a-zA-Z0-9]{15}"
       },
-       {
+      {
         "name": "IMAGE_VERSION",
         "description": "The OpenShift router image version which should be deployed",
-        "value": "openshift/origin-haproxy-router:v1.3.1"
+        "value": "openshift/origin-haproxy-router:v1.3.2"
       }
   ]
 }

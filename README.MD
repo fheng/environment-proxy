@@ -17,14 +17,16 @@ oc create configmap customrouter --from-file=haproxy-config.template
 ```
 
 
-Get the value of the environment namespace (RHMAP environment project in OpenShift) via the command `oc get projects`. This should take the format `rhmap-rhmap-myEnvironmentName` and use this in the placeholders in the following command, which must be run as administrator:
+Get the value of the environment namespace (RHMAP environment project in OpenShift) via the command `oc get projects`. This should take the format `rhmap-rhmap-myEnvironmentName`. We also need to pass the environment name, which is the latter section of the namespace. From the previous example, this would be `myEnvironmentName`. Finally, we are required to pass the domain name with any subdomains where we want the external route for the environment-proxy to be created. For example `my.example.com` will create a route exposing `https://myEnvironment.my.example.com`. Use these values in the placeholders in the following command, which must be run as administrator:
 
 ```
-sudo oc new-app -f router-template.json -n <environment-project-namespace> --param=ENVIRONMENT_NAMESPACE=<environment-project-namespace>
+sudo oc new-app -f router-template.json -n <environment-project-namespace> --param=ENVIRONMENT_NAMESPACE=<environment-project-namespace> --param=ENVIRONMENT=<environment-name> --param=DOMAIN=<domain>
+
 ```
 
 For example :
 
 ```
-sudo oc new-app -f router-template.json -n rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT_NAMESPACE=rhmap-rhmap-myEnvironmentName
+sudo oc new-app -f router-template.json -n rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT_NAMESPACE=rhmap-rhmap-myEnvironmentName --param=ENVIRONMENT=myEnvironment --param=DOMAIN=my.example.com --param=ROUTER_SYSLOG_ADDRESS=logger:514
 ```
+
